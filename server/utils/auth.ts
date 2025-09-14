@@ -2,6 +2,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma/client";
 import { emailOTP } from "better-auth/plugins";
 import { betterAuth } from "better-auth";
+import { createAuthMiddleware, APIError } from "better-auth/api";
 import nodemailer from "nodemailer";
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
 
@@ -21,6 +22,23 @@ const transporter = nodemailer.createTransport({
 });
 
 export const auth = betterAuth({
+  user: {
+    changeEmail: {
+      enabled: true,
+    },
+  },
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path !== "/email-otp/send-verification-otp") {
+        return;
+      }
+      if (!ctx.body?.email.endsWith("@example.com")) {
+        throw new APIError("BAD_REQUEST", {
+          message: "Email must end with @example.com",
+        });
+      }
+    }),
+  },
   database: prismaAdapter(client, {
     provider: "sqlite",
   }),

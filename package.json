@@ -26,5 +26,8 @@
     "@iconify-json/lucide": "^1.2.67",
     "@types/nodemailer": "^7.0.1",
     "prisma": "6.16.1"
+  },
+  "prisma": {
+    "schema": "./server/prisma/schema"
   }
 }
