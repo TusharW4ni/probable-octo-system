@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { authClient } from "../../composables/auth-client";
+import { authClient } from "../composables/auth-client";
 
 const toast = useToast();
 
